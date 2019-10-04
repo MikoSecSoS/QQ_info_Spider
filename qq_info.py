@@ -13,8 +13,8 @@ url = "https://ti.qq.com/cgi-bin/more_profile_card/more_profile_card"
 headers = {
 	'Origin': 'http://ti.qq.com',
 	'User-Agent': 'Mozilla/5.0 (Linux; Android 9; PADT00 Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044904 Mobile Safari/537.36 V1_AND_SQ_7.1.0_0_TIM_D TIM/2.3.1.1834 QQ/6.5.5  NetType/WIFI WebP/0.3.0 Pixel/1080',
-	'Referer': 'http://ti.qq.com/qcard/index.html?qq=1517359887',
-	'Cookie': 'pgv_info=ssid=s7796942920; pgv_pvid=5861781518; uin=o1517359887; p_uin=o1517359887; skey=MnUDUfgThf',
+	'Referer': 'http://ti.qq.com/qcard/index.html?qq=2386001503',
+	'Cookie': 'pgv_info=ssid=s7796942920; pgv_pvid=5861781518; uin=2386001503; p_uin=2386001503; skey=MnUDUfgThf',
 }
 
 flag = 0
