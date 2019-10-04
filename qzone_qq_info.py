@@ -7,6 +7,9 @@ import json
 
 import requests
 
+from multiprocessing import Pool
+from concurrent.futures import ThreadPoolExecutor
+
 from random import randint
 from pymysql.err import InternalError
 
@@ -14,11 +17,11 @@ url = "https://h5.qzone.qq.com/proxy/domain/base.qzone.qq.com/cgi-bin/user/cgi_u
 
 headers = {
 	'User-Agent': 'Mozilla/5.0 (Linux; Android 9; PADT00 Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044904 Mobile Safari/537.36 V1_AND_SQ_7.1.0_0_TIM_D TIM/2.3.1.1834 QQ/6.5.5  NetType/WIFI WebP/0.3.0 Pixel/1080',
-	'Cookie': 'pgv_info=ssid=s2528652011; uin=o2386001503; skey=qwq; p_uin=o2386001503; p_skey=owo',
+	'Cookie': 'pgv_info=ssid=s2528652011; uin=o2386001503; skey=; p_uin=o2386001503; p_skey=',
 }
 
-def get_info(qq, gtk): # 获取信息
-	req = requests.get(url.format(qq=qq, gtk=gtk), headers=headers)
+def get_info(qq): # 获取信息
+	req = requests.get(url.format(qq=qq), headers=headers)
 	try:
 		data = json.loads(re.findall("_Callback\((.*?)\);", req.text, re.S)[0])
 	except Exception as e:
@@ -313,7 +316,42 @@ def sleep(end, start=0):
 		start += 1
 	print("\n"+("="*50))
 
+def start(qq):
+	info, sourceData = get_info(qq)
+
+	if not info:
+		# qq += 1
+		# sleep(randint(3,10))
+		return
+
+	info_texts = ""
+	for k, v in info.items():
+		text = k+" => "+repr(v)
+		info_texts += text+"\n"
+	info_texts += ("="*50)+"\n"
+	print(info_texts)
+
+	sourceData_texts = ""
+	for k, v in sourceData.items():
+		text = k+" => "+repr(v)
+		sourceData_texts += text+"\n"
+	sourceData_texts += ("="*50)+"\n"
+
+	save_to_mysql(info)
+	save_to_text("QzoneInfo", "QzoneInfo.txt", info_texts, "a+")
+	save_to_text("QzoneSourceData", "soueceData.txt", sourceData_texts, "a+")
+	# qq += 1
+
+	# end = randint(3,23)
+	end = randint(0,3)
+	sleep(end=end)
+
 def main():
+	try:
+		initDatabase()
+	except InternalError:
+		print("花Q!")
+
 	if headers.get("cookie"):
 		cookie = headers.get("cookie")
 	elif headers.get("Cookie"):
@@ -327,11 +365,13 @@ def main():
 	# 	return
 	# bkn = get_bkn(skey[0])
 	gtk = get_gtk(cookie)
-
-	try:
-		initDatabase()
-	except InternalError:
-		print("花Q!")
+	global url
+	url = url.format(qq="{qq}", gtk=gtk)
+	qq_list = [randint(100000000, 3500000000) for _ in range(1000)]
+	pool = Pool(10)
+	pool.map(start, qq_list)
+	# with ThreadPoolExecutor(10) as p:
+	# 	[p.submit(start, qq) for qq in qq_list]
 
 	# qq_5 = [i for i in range(10000, 100000)] # 5位QQ
 	# qq_6 = [i for i in range(100000, 1000000)] # 6位QQ
@@ -343,39 +383,39 @@ def main():
 
 	# qq = 10343
 	# qq = 2000000000
-	qq_list = [randint(100000000, 3500000000) for _ in range(100)]
+	# qq_list = [randint(100000000, 3500000000) for _ in range(100)]
 	# while qq < 100000000000:
-	for qq in qq_list:
-		# info, sourceData = get_info(qq, bkn)
-		info, sourceData = get_info(qq, gtk)
+	# for qq in qq_list:
+	#	# info, sourceData = get_info(qq, bkn)
+	# 	info, sourceData = get_info(qq, gtk)
 
-		if not info:
-			# qq += 1
-			# sleep(randint(3,10))
-			continue
+	# 	if not info:
+	# 		# qq += 1
+	# 		# sleep(randint(3,10))
+	# 		continue
 
-		info_texts = ""
-		for k, v in info.items():
-			text = k+" => "+repr(v)
-			info_texts += text+"\n"
-		info_texts += ("="*50)+"\n"
-		print(info_texts)
+	# 	info_texts = ""
+	# 	for k, v in info.items():
+	# 		text = k+" => "+repr(v)
+	# 		info_texts += text+"\n"
+	# 	info_texts += ("="*50)+"\n"
+	# 	print(info_texts)
 
-		sourceData_texts = ""
-		for k, v in sourceData.items():
-			text = k+" => "+repr(v)
-			sourceData_texts += text+"\n"
-		sourceData_texts += ("="*50)+"\n"
+	# 	sourceData_texts = ""
+	# 	for k, v in sourceData.items():
+	# 		text = k+" => "+repr(v)
+	# 		sourceData_texts += text+"\n"
+	# 	sourceData_texts += ("="*50)+"\n"
 
-		save_to_mysql(info)
-		save_to_text("QzoneInfo", "QzoneInfo.txt", info_texts, "a+")
-		save_to_text("QzoneSourceData", "soueceData.txt", sourceData_texts, "a+")
-		# qq += 1
+	# 	save_to_mysql(info)
+	# 	save_to_text("QzoneInfo", "QzoneInfo.txt", info_texts, "a+")
+	# 	save_to_text("QzoneSourceData", "soueceData.txt", sourceData_texts, "a+")
+	# 	# qq += 1
 
-		# end = randint(3,23)
-		end = randint(0,3)
-		sleep(end=end)
-		# break
+	# 	# end = randint(3,23)
+	# 	end = randint(0,3)
+	# 	sleep(end=end)
+	# 	# break
 
 if __name__ == '__main__':
 	main()
