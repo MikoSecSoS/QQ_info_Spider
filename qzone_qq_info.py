@@ -14,7 +14,7 @@ url = "https://h5.qzone.qq.com/proxy/domain/base.qzone.qq.com/cgi-bin/user/cgi_u
 
 headers = {
 	'User-Agent': 'Mozilla/5.0 (Linux; Android 9; PADT00 Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044904 Mobile Safari/537.36 V1_AND_SQ_7.1.0_0_TIM_D TIM/2.3.1.1834 QQ/6.5.5  NetType/WIFI WebP/0.3.0 Pixel/1080',
-	'Cookie': 'pgv_info=ssid=s2528652011; uin=o2386001503; skey=qwq; p_uin=o2386001503; p_skey=owo',
+	'Cookie': 'pgv_info=ssid=s2528652011; uin=o2386001503; skey=@jXkYFCyvv; p_uin=o2386001503; p_skey=P92O9Q1vYJDh1NEVhEQ8p-lE7bSAsgQcAiAA64QEqRE_',
 }
 
 def get_info(qq, gtk): # 获取信息
