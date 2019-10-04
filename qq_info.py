@@ -13,8 +13,8 @@ url = "https://ti.qq.com/cgi-bin/more_profile_card/more_profile_card"
 headers = {
 	'Origin': 'http://ti.qq.com',
 	'User-Agent': 'Mozilla/5.0 (Linux; Android 9; PADT00 Build/PPR1.180610.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044904 Mobile Safari/537.36 V1_AND_SQ_7.1.0_0_TIM_D TIM/2.3.1.1834 QQ/6.5.5  NetType/WIFI WebP/0.3.0 Pixel/1080',
-	'Referer': 'http://ti.qq.com/qcard/index.html?qq=2386001503',
-	'Cookie': 'pgv_info=ssid=s7796942920; pgv_pvid=5861781518; uin=o1426175909; p_uin=o1426175909; skey=MUAYzIk6Ux',
+	'Referer': 'http://ti.qq.com/qcard/index.html?qq=1517359887',
+	'Cookie': 'pgv_info=ssid=s7796942920; pgv_pvid=5861781518; uin=o1517359887; p_uin=o1517359887; skey=MnUDUfgThf',
 }
 
 flag = 0
@@ -35,8 +35,9 @@ def get_info(qq, bkn):
 		info = parseData(sourceData)
 		return (info, sourceData)
 	else:
-		if data.get("ec") == "100000":
+		if data.get("ec") == 100000:
 			print("[qwq] Cookie失效,请重新登录~")
+			exit()
 		elif data.get("em") == "server&nbsp;busy":
 			print(qq,"Not Found.")
 		elif data.get("em") == "查看资料过于频繁":
@@ -322,12 +323,15 @@ def main():
 	# qq_10 = [i for i in range(1000000000, 10000000000)] # 10位QQ
 	# qq_11 = [i for i in range(10000000000, 100000000000)] # 11位QQ
 
-	qq = 10304
-	while qq < 100000000000:
+	# qq = 10343
+	# qq = 2000000000
+	qq_list = [randint(100000000, 3500000000) for _ in range(100)]
+	# while qq < 100000000000:
+	for qq in qq_list:
 		info, sourceData = get_info(qq, bkn)
 
 		if not info:
-			qq += 1
+			# qq += 1
 			sleep(randint(3,10))
 			continue
 
@@ -336,7 +340,7 @@ def main():
 		print("="*50)
 
 		save_data_mysql(info)
-		qq += 1
+		# qq += 1
 
 		end = randint(3,23)
 		sleep(end=end)
